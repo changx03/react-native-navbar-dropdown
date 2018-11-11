@@ -1,5 +1,5 @@
 {
-  "name": "NavbarDropdown",
+  "name": "navbar-dropdown",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,7 +7,7 @@
     "tsc": "tsc",
     "clean": "rimraf build",
     "build": "yarn clean && yarn tsc",
-    "watch": "yarn build -w",
+    "watch": "tsc -w",
     "android": "react-native run-android",
     "ios": "react-native run-ios"
   },
