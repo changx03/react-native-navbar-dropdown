@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, StyleSheet, View } from 'react-native'
+import { Button, StyleSheet, View, Alert } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
 import DropdownButton from './Dropdown'
 
@@ -18,9 +18,9 @@ const styles = StyleSheet.create({
   }
 })
 
-function onDropdownRowPress (id: string | number) {
+function onDropdownRowPress(id: string | number) {
   /* global */
-  alert(id)
+  Alert.alert('Alert', String(id))
 }
 
 export default class Home extends React.Component<NavigationScreenProps, {}> {

@@ -123,8 +123,8 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
   }
 
   select = (id: number | string) => {
-    this.props.onRowPress(id)
     this.props.closeAfterRowPress && this.hide()
+    this.props.onRowPress(id)
   }
 
   onButtonPress = () => {
@@ -163,7 +163,7 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
   )
 
   renderModal = () => {
-    if (!this.state.showDropdown) {
+    if(!this.state.showDropdown) {
       return null
     }
 
