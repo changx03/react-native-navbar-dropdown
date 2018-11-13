@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Button, StyleSheet, View } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
-import HamburgerButton from './Dropdown'
+import DropdownButton from './Dropdown'
 
 const styles = StyleSheet.create({
   container: {
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 export default class Home extends React.Component<NavigationScreenProps, {}> {
   static navigationOptions = {
     headerTitle: 'Dropdown menu',
-    headerRight: <HamburgerButton onRowClick={() => {}} rowData={['Option 1', 'Option 2', 'Option 3']} />
+    headerRight: <DropdownButton onRowPress={() => {}} rowData={['Option 1', 'Option 2', 'Option 3']} />
   }
 
   render() {

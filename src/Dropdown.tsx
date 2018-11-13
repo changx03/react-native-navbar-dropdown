@@ -1,44 +1,42 @@
 import * as React from 'react'
 import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
   Dimensions,
-  ViewStyle,
-  StyleProp,
   FlatList,
-  TouchableWithoutFeedback
+  Modal,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
-const styles = StyleSheet.create({
-  modal: {
-    flex: 1,
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    backgroundColor: 'transparent'
-  },
-  dropdown: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    shadowRadius: 3,
-    shadowOpacity: 0.3,
-    elevation: 4
-  },
-  list: {
-    // flexGrow: 1,
-  },
-  rowText: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    fontSize: 12,
-    backgroundColor: 'white',
-    alignSelf: 'flex-start'
+interface RowItemProps {
+  onPressItem(id: string | number): void
+  title: string
+  id: string | number
+}
+
+class RowItem extends React.PureComponent<RowItemProps, {}> {
+  private _onPress = () => {
+    const { onPressItem, id } = this.props
+    onPressItem(id)
   }
-})
+
+  render() {
+    const { title } = this.props
+
+    return (
+      <TouchableOpacity onPress={this._onPress}>
+        <View style={styles.rowText}>
+          <Text>{title}</Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+}
 
 interface ButtonFrame {
   x: number
@@ -49,12 +47,13 @@ interface ButtonFrame {
 
 interface FlatListData {
   title: string
-  key: string | number
+  id: string | number
 }
 
 interface DropdownProps {
   rowData: string[]
-  onRowClick?(idx: number): void
+  onRowPress?(id: number | string): void
+  closeAfterRowPress?: boolean
 }
 
 interface DropdownStates {
@@ -63,6 +62,10 @@ interface DropdownStates {
 }
 
 export default class HamburgerButton extends React.Component<DropdownProps, DropdownStates> {
+  static defaultProps = {
+    closeAfterRowPress: true
+  }
+
   buttonRef: React.RefObject<TouchableOpacity> = React.createRef()
   buttonFrame: ButtonFrame
 
@@ -73,7 +76,7 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
     const { rowData } = this.props
     const data = rowData.map(i => ({
       title: i,
-      key: i
+      id: i
     }))
     this.state = {
       showDropdown: false,
@@ -123,8 +126,9 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
     })
   }
 
-  select = (idx: number) => {
-    /* PH for onRowSelect event */
+  select = (id: number | string) => {
+    this.props.onRowPress(id)
+    this.props.closeAfterRowPress && this.hide()
   }
 
   onButtonPress = () => {
@@ -152,9 +156,15 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
     return positionStyle
   }
 
-  renderRow = ({ item }) => <Text style={styles.rowText}>{item.title}</Text>
+  renderRow = ({ item, index }) => {
+    return <RowItem id={item.id} title={item.title} onPressItem={this.select} />
+  }
 
-  renderDropdown = () => <FlatList style={styles.list} data={this.state.listData} renderItem={this.renderRow} />
+  keyExtractor = (item, _index) => item.id
+
+  renderDropdown = () => (
+    <FlatList data={this.state.listData} renderItem={this.renderRow} keyExtractor={this.keyExtractor} />
+  )
 
   renderModal = () => {
     if (!this.state.showDropdown) {
@@ -173,12 +183,34 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
       >
         <TouchableWithoutFeedback onPress={this.onModalPress}>
           <View style={styles.modal}>
-            <View style={[styles.dropdown, frameStyle]}>
-            {this.renderDropdown()}
-            </View>
+            <View style={[styles.dropdown, frameStyle]}>{this.renderDropdown()}</View>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  modal: {
+    flex: 1,
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'transparent'
+  },
+  dropdown: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    shadowRadius: 3,
+    shadowOpacity: 0.3,
+    elevation: 4
+  },
+  rowText: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    fontSize: 12,
+    backgroundColor: 'white',
+    alignSelf: 'flex-start'
+  }
+})
