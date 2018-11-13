@@ -18,10 +18,15 @@ const styles = StyleSheet.create({
   }
 })
 
+function onDropdownRowPress (id: string | number) {
+  /* global */
+  alert(id)
+}
+
 export default class Home extends React.Component<NavigationScreenProps, {}> {
   static navigationOptions = {
     headerTitle: 'Dropdown menu',
-    headerRight: <DropdownButton onRowPress={() => {}} rowData={['Option 1', 'Option 2', 'Option 3']} />
+    headerRight: <DropdownButton onRowPress={onDropdownRowPress} rowData={['Check Bluetooth', 'Software update']} />
   }
 
   render() {

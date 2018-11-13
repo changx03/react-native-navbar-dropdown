@@ -88,11 +88,7 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
     return (
       <View>
         <TouchableOpacity onPress={this.onButtonPress} ref={this.buttonRef}>
-          <View
-            style={{
-              padding: 12
-            }}
-          >
+          <View style={styles.iconWrapper}>
             <Icon name="more-vert" size={24} color="#757575" />
           </View>
         </TouchableOpacity>
@@ -156,7 +152,7 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
     return positionStyle
   }
 
-  renderRow = ({ item, index }) => {
+  renderRow = ({ item }) => {
     return <RowItem id={item.id} title={item.title} onPressItem={this.select} />
   }
 
@@ -192,23 +188,27 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
 }
 
 const styles = StyleSheet.create({
+  iconWrapper: {
+    padding: 8
+  },
   modal: {
     flex: 1,
     position: 'absolute',
     height: '100%',
     width: '100%',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   dropdown: {
     position: 'absolute',
     backgroundColor: 'white',
     shadowRadius: 3,
     shadowOpacity: 0.3,
-    elevation: 4
+    elevation: 4,
+    padding: 8
   },
   rowText: {
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 12,
     fontSize: 12,
     backgroundColor: 'white',
     alignSelf: 'flex-start'
