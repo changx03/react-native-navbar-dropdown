@@ -13,12 +13,6 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
-interface RowItemProps {
-  onPressItem(id: string | number): void
-  title: string
-  id: string | number
-}
-
 interface ButtonFrame {
   x: number
   y: number
@@ -31,15 +25,15 @@ interface FlatListData {
   id: string | number
 }
 
-export interface DropdownProps {
-  rowData: string[]
-  onRowPress?(id: number | string): void
-  closeAfterRowPress?: boolean
-}
-
 interface DropdownStates {
   showDropdown: boolean
   listData: FlatListData[]
+}
+
+interface RowItemProps {
+  onPressItem(id: string | number): void
+  title: string
+  id: string | number
 }
 
 class RowItem extends React.PureComponent<RowItemProps, {}> {
@@ -61,7 +55,12 @@ class RowItem extends React.PureComponent<RowItemProps, {}> {
   }
 }
 
-class HamburgerButton extends React.Component<{ buttonRef: React.RefObject<TouchableOpacity>, onButtonPress?(): void },{}> {
+interface HamburgerButtonProps {
+  buttonRef: React.RefObject<TouchableOpacity>
+  onButtonPress?(): void
+}
+
+class HamburgerButton extends React.Component<HamburgerButtonProps, {}> {
   render() {
     return (
       <TouchableOpacity onPress={this.props.onButtonPress} ref={this.props.buttonRef}>
@@ -71,6 +70,12 @@ class HamburgerButton extends React.Component<{ buttonRef: React.RefObject<Touch
     </TouchableOpacity>
     )
   }
+}
+
+export interface DropdownProps {
+  rowData: string[]
+  onRowPress?(id: number | string): void
+  closeAfterRowPress?: boolean
 }
 
 export default class Dropdown extends React.Component<DropdownProps, DropdownStates> {
@@ -84,7 +89,6 @@ export default class Dropdown extends React.Component<DropdownProps, DropdownSta
   constructor(props) {
     super(props)
 
-    // dataSource for list
     const { rowData } = this.props
     const data = rowData.map(i => ({
       title: i,
@@ -171,7 +175,7 @@ export default class Dropdown extends React.Component<DropdownProps, DropdownSta
   )
 
   renderModal = () => {
-    if(!this.state.showDropdown) {
+    if (!this.state.showDropdown) {
       return null
     }
 
