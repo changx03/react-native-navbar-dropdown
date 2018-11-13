@@ -19,6 +19,29 @@ interface RowItemProps {
   id: string | number
 }
 
+interface ButtonFrame {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+
+interface FlatListData {
+  title: string
+  id: string | number
+}
+
+export interface DropdownProps {
+  rowData: string[]
+  onRowPress?(id: number | string): void
+  closeAfterRowPress?: boolean
+}
+
+interface DropdownStates {
+  showDropdown: boolean
+  listData: FlatListData[]
+}
+
 class RowItem extends React.PureComponent<RowItemProps, {}> {
   private _onPress = () => {
     const { onPressItem, id } = this.props
@@ -38,30 +61,19 @@ class RowItem extends React.PureComponent<RowItemProps, {}> {
   }
 }
 
-interface ButtonFrame {
-  x: number
-  y: number
-  w: number
-  h: number
+class HamburgerButton extends React.Component<{ buttonRef: React.RefObject<TouchableOpacity>, onButtonPress?(): void },{}> {
+  render() {
+    return (
+      <TouchableOpacity onPress={this.props.onButtonPress} ref={this.props.buttonRef}>
+      <View style={styles.iconWrapper}>
+        <Icon name="more-vert" size={24} color="#757575" />
+      </View>
+    </TouchableOpacity>
+    )
+  }
 }
 
-interface FlatListData {
-  title: string
-  id: string | number
-}
-
-interface DropdownProps {
-  rowData: string[]
-  onRowPress?(id: number | string): void
-  closeAfterRowPress?: boolean
-}
-
-interface DropdownStates {
-  showDropdown: boolean
-  listData: FlatListData[]
-}
-
-export default class HamburgerButton extends React.Component<DropdownProps, DropdownStates> {
+export default class Dropdown extends React.Component<DropdownProps, DropdownStates> {
   static defaultProps = {
     closeAfterRowPress: true
   }
@@ -87,11 +99,7 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
   render() {
     return (
       <View>
-        <TouchableOpacity onPress={this.onButtonPress} ref={this.buttonRef}>
-          <View style={styles.iconWrapper}>
-            <Icon name="more-vert" size={24} color="#757575" />
-          </View>
-        </TouchableOpacity>
+        <HamburgerButton onButtonPress={this.onButtonPress} buttonRef={this.buttonRef} />
         {this.renderModal()}
       </View>
     )
@@ -99,7 +107,7 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
 
   updatePosition = callback => {
     this.buttonRef.current.measure((_x, _y, width, height, pageX, pageY) => {
-      console.log('_x, _y, width, height, pageX, pageY', _x, _y, width, height, pageX, pageY)
+      // console.log('_x, _y, width, height, pageX, pageY', _x, _y, width, height, pageX, pageY)
       this.buttonFrame = {
         x: pageX,
         y: pageY,
@@ -148,7 +156,7 @@ export default class HamburgerButton extends React.Component<DropdownProps, Drop
       right: Math.max(8, windowWidth - this.buttonFrame.x - this.buttonFrame.w)
     }
 
-    console.log(`top: ${positionStyle.top}, right: ${positionStyle.right}`)
+    // console.log(`top: ${positionStyle.top}, right: ${positionStyle.right}`)
     return positionStyle
   }
 
