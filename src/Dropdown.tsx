@@ -56,21 +56,16 @@ class RowItem extends React.PureComponent<RowItemProps, {}> {
 }
 
 interface HamburgerButtonProps {
-  buttonRef: React.RefObject<TouchableOpacity>
   onButtonPress?(): void
 }
 
-class HamburgerButton extends React.Component<HamburgerButtonProps, {}> {
-  render() {
-    return (
-      <TouchableOpacity onPress={this.props.onButtonPress} ref={this.props.buttonRef}>
-      <View style={styles.iconWrapper}>
-        <Icon name="more-vert" size={24} color="#757575" />
-      </View>
-    </TouchableOpacity>
-    )
-  }
-}
+const HamburgerButton = React.forwardRef((props: HamburgerButtonProps, ref: React.RefObject<TouchableOpacity>) => (
+  <TouchableOpacity onPress={props.onButtonPress} ref={ref}>
+  <View style={styles.iconWrapper}>
+    <Icon name="more-vert" size={24} color="#757575" />
+  </View>
+</TouchableOpacity>
+))
 
 export interface DropdownProps {
   rowData: string[]
@@ -103,7 +98,7 @@ export default class Dropdown extends React.Component<DropdownProps, DropdownSta
   render() {
     return (
       <View>
-        <HamburgerButton onButtonPress={this.onButtonPress} buttonRef={this.buttonRef} />
+        <HamburgerButton onButtonPress={this.onButtonPress} ref={this.buttonRef} />
         {this.renderModal()}
       </View>
     )
